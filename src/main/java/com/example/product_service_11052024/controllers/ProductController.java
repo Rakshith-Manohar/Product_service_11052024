@@ -26,15 +26,15 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public Product createNewProduct(@RequestBody ProductResponseDto productResponseDto) {
-        return productService.addProduct(
+    public ProductResponseDto createNewProduct(@RequestBody ProductResponseDto productResponseDto) {
+        Product product= productService.addProduct(
                 productResponseDto.getTitle(),
                 productResponseDto.getDescription(),
                 productResponseDto.getImage(),
                 productResponseDto.getCategory(),
                 productResponseDto.getPrice()
         );
-
+        return convertToProductResponseDto(product);
     }
 
     private ProductResponseDto convertToProductResponseDto(Product product){
