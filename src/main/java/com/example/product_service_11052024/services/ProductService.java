@@ -5,9 +5,9 @@ import com.example.product_service_11052024.dtos.ProductResponseDto;
 import com.example.product_service_11052024.models.Product;
 
 public interface ProductService {
-    public ProductResponseDto getsingleProduct(int productId);
+    public Product getsingleProduct(int productId);
 
-    public ProductResponseDto addProduct(
+    public Product addProduct(
             String title,
             String description,
             String imageUrl,

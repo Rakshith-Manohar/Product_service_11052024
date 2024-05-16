@@ -2,6 +2,7 @@ package com.example.product_service_11052024.services;
 
 import com.example.product_service_11052024.dtos.FakeStoreDto;
 import com.example.product_service_11052024.dtos.ProductResponseDto;
+import com.example.product_service_11052024.models.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,19 +16,19 @@ public class FakeStoreProductService implements ProductService {
     }
 
     @Override
-    public ProductResponseDto getsingleProduct(int productId) {
+    public Product getsingleProduct(int productId) {
 
         FakeStoreDto fakeStoreDto = restTemplate.getForObject(
                 "http://fakestoreapi.com/products/" + productId,
                 FakeStoreDto.class
         );
 
-        return fakeStoreDto.toProductResponseDto();
+        return fakeStoreDto.toProduct();
 
     }
 
     @Override
-    public ProductResponseDto addProduct(
+    public Product addProduct(
             String title,
             String description,
             String imageUrl,
@@ -46,6 +47,6 @@ public class FakeStoreProductService implements ProductService {
                 fakeStoreDto,
                 FakeStoreDto.class
         );
-        return response.toProductResponseDto();
+        return response.toProduct();
     }
 }
