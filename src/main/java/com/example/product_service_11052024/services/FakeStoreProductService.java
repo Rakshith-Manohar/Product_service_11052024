@@ -4,23 +4,26 @@ import com.example.product_service_11052024.dtos.FakeStoreDto;
 import com.example.product_service_11052024.dtos.ProductResponseDto;
 import com.example.product_service_11052024.exceptions.ProductNotFoundException;
 import com.example.product_service_11052024.models.Product;
+import com.example.product_service_11052024.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service("FakeStoreProductService")
 public class FakeStoreProductService implements ProductService {
 
+    private final ProductRepository productRepository;
     private RestTemplate restTemplate;
 
-    public FakeStoreProductService(RestTemplate restTemplate) {
+    public FakeStoreProductService(RestTemplate restTemplate, ProductRepository productRepository) {
         this.restTemplate = restTemplate;
+        this.productRepository = productRepository;
     }
 
     @Override
-    public Product getsingleProduct(int productId) throws ProductNotFoundException{
+    public Product getsingleProduct(Long productId) throws ProductNotFoundException{
 
         FakeStoreDto fakeStoreDto = restTemplate.getForObject(
                 "http://fakestoreapi.com/products/" + productId,
@@ -73,5 +76,27 @@ public class FakeStoreProductService implements ProductService {
                 FakeStoreDto.class
         );
         return response.toProduct();
+    }
+
+    @Override
+    public Product deleteProduct(Long productId) throws ProductNotFoundException {
+        Product product = productRepository.findByIdIs(productId);
+        if(product == null){
+            throw new ProductNotFoundException(
+                    "Product with id "+ productId + " not found"
+            );
+        }
+        productRepository.delete(product);
+        return product;
+    }
+
+    @Override
+    public Product updateProduct(Long productId, String title, String description, String imageUrl, String category, double price) throws ProductNotFoundException {
+        return null;
+    }
+
+    @Override
+    public Product replaceProduct(Long productId, String title, String description, String imageUrl, String category, double price) throws ProductNotFoundException {
+        return null;
     }
 }
