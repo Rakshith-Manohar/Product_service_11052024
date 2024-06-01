@@ -1,15 +1,18 @@
 package com.example.product_service_11052024;
 
+import com.example.product_service_11052024.models.Category;
 import com.example.product_service_11052024.models.Product;
 import com.example.product_service_11052024.repositories.CategoryRepository;
 import com.example.product_service_11052024.repositories.ProductRepository;
 import com.example.product_service_11052024.repositories.projections.ProductProjection;
 import com.example.product_service_11052024.repositories.projections.ProductWithIdAndTitle;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 class ProductService11052024ApplicationTests {
@@ -67,7 +70,34 @@ class ProductService11052024ApplicationTests {
 
     @Test
     void testNativeSQL(){
-        Product product=   productRepository.someNativeSQL(1L);
+        Product product=   productRepository.someNativeSQL(5L);
         System.out.println(product.getTitle());
+        System.out.println(product.getId());
+    }
+
+    @Test
+    @Transactional
+    void testFetchType(){
+        Optional<Category> category = categoryRepository.findById(2L);
+        if(category.isPresent()){
+            System.out.println(category.get().getTitle());
+            List<Product> products = category.get().getProducts();
+            for(Product product : products){
+                System.out.println(product.getTitle());
+            }
+        }
+    }
+
+    @Test
+    @Transactional
+    void testFetchMode(){
+        List<Category> categories = categoryRepository.findByTitleEndingWith("electronics");
+        for(Category category : categories){
+            System.out.println(category.getTitle());
+            List<Product> products = category.getProducts();
+            for(Product product : products){
+                System.out.println(product.getTitle());
+            }
+        }
     }
 }
